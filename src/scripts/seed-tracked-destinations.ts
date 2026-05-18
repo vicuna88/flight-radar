@@ -21,116 +21,36 @@ interface SeedTrackedDestinationRow {
 
 const seedRows: SeedTrackedDestinationRow[] = [
   {
-    id: "lon-kef-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "KEF",
-    destinationCity: "Reykjavik",
-    destinationCountry: "Iceland",
+    id: "tpe-syd-rt-biz",
+    originAirportCode: "TPE",
+    destinationAirportCode: "SYD",
+    destinationCity: "Sydney",
+    destinationCountry: "Australia",
     tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
+    cabinClass: "business",
+    departureDateFrom: "2026-09-24",
+    departureDateTo: "2026-09-24",
+    returnDateFrom: "2026-09-30",
+    returnDateTo: "2026-09-30",
     maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
+    currencyCode: "TWD",
+    locale: "zh-TW"
   },
   {
-    id: "lon-cph-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "CPH",
-    destinationCity: "Copenhagen",
-    destinationCountry: "Denmark",
+    id: "rmq-syd-rt-biz",
+    originAirportCode: "RMQ",
+    destinationAirportCode: "SYD",
+    destinationCity: "Sydney",
+    destinationCountry: "Australia",
     tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
+    cabinClass: "business",
+    departureDateFrom: "2026-09-24",
+    departureDateTo: "2026-09-24",
+    returnDateFrom: "2026-09-30",
+    returnDateTo: "2026-09-30",
     maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
-  },
-  {
-    id: "lon-arn-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "ARN",
-    destinationCity: "Stockholm",
-    destinationCountry: "Sweden",
-    tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
-    maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
-  },
-  {
-    id: "lon-osl-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "OSL",
-    destinationCity: "Oslo",
-    destinationCountry: "Norway",
-    tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
-    maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
-  },
-  {
-    id: "lon-hel-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "HEL",
-    destinationCity: "Helsinki",
-    destinationCountry: "Finland",
-    tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
-    maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
-  },
-  {
-    id: "lon-bud-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "BUD",
-    destinationCity: "Budapest",
-    destinationCountry: "Hungary",
-    tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
-    maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
-  },
-  {
-    id: "lon-prg-rt-econ",
-    originAirportCode: "LON",
-    destinationAirportCode: "PRG",
-    destinationCity: "Prague",
-    destinationCountry: "Czech Republic",
-    tripType: "round_trip",
-    cabinClass: "economy",
-    departureDateFrom: "2026-06-01",
-    departureDateTo: "2026-06-30",
-    returnDateFrom: "2026-06-04",
-    returnDateTo: "2026-07-10",
-    maxStops: 1,
-    currencyCode: "GBP",
-    locale: "en-GB"
+    currencyCode: "TWD",
+    locale: "zh-TW"
   }
 ];
 
@@ -188,6 +108,16 @@ async function main(): Promise<void> {
   for (const destination of activeDestinations) {
     console.log(
       `- ${destination.id}: ${destination.originAirportCode} -> ${destination.destinationAirportCode} (${destination.cabinClass})`
+    );
+  }
+
+  await client.close();
+}
+
+void main().catch((error) => {
+  console.error("[seed-tracked-destinations] failed", error);
+  process.exitCode = 1;
+});
     );
   }
 
