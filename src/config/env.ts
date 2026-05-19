@@ -14,25 +14,25 @@ export const environmentSchema = z.object({
   GROQ_API_KEY: z.string().min(1).optional(),
   RSS_FEED_URLS: z.string().min(1),
   DISCORD_WEBHOOK_URL: z.string().url(),
-  BUSINESS_DEAL_THRESHOLD_GBP: z.coerce.number().int().positive().default(1000),
+  BUSINESS_DEAL_THRESHOLD_GBP: z.coerce.number().int().nonnegative().default(1000),
   BUSINESS_DEAL_MIN_CONFIDENCE: z.coerce.number().min(0).max(1).default(0.8),
   SCHEDULER_LEASE_DURATION_MS: z.coerce.number().int().positive().default(30 * 60 * 1000)
-}).transform((env) => ({
-  ...env,
-  DATABASE_URL: env.TURSO_URL ?? env.DATABASE_URL,
-  DATABASE_AUTH_TOKEN: env.TURSO_AUTH_TOKEN ?? env.DATABASE_AUTH_TOKEN
-}));
+});
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-export function loadEnvironment(input: NodeJS.ProcessEnv = process.env): Environment {
-  return environmentSchema.parse(input);
+export interface AppConfig {
+  env: Environment;
+  db: TursoConnectionConfig;
 }
 
-export function getTursoConnectionConfig(env: Environment): TursoConnectionConfig {
+export const getConfig = (): AppConfig => {
+  const env = environmentSchema.parse(process.env);
   return {
-    url: env.DATABASE_URL,
-    authToken: env.DATABASE_AUTH_TOKEN
+    env,
+    db: {
+      url: env.DATABASE_URL,
+      authToken: env.DATABASE_AUTH_TOKEN
+    }
   };
-}
-
+};
