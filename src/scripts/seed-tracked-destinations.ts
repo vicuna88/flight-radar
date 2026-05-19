@@ -20,6 +20,7 @@ interface SeedTrackedDestinationRow {
 }
 
 const seedRows: SeedTrackedDestinationRow[] = [
+  // === 台北 (TPE) 出發 ===
   {
     id: "tpe-syd-rt-biz",
     originAirportCode: "TPE",
@@ -27,7 +28,7 @@ const seedRows: SeedTrackedDestinationRow[] = [
     destinationCity: "Sydney",
     destinationCountry: "Australia",
     tripType: "round_trip",
-    cabinClass: "business",
+    cabinClass: "business", // 商務艙
     departureDateFrom: "2026-09-24",
     departureDateTo: "2026-09-24",
     returnDateFrom: "2026-09-30",
@@ -37,13 +38,46 @@ const seedRows: SeedTrackedDestinationRow[] = [
     locale: "zh-TW"
   },
   {
+    id: "tpe-syd-rt-eco",
+    originAirportCode: "TPE",
+    destinationAirportCode: "SYD",
+    destinationCity: "Sydney",
+    destinationCountry: "Australia",
+    tripType: "round_trip",
+    cabinClass: "economy", // 經濟艙
+    departureDateFrom: "2026-09-24",
+    departureDateTo: "2026-09-24",
+    returnDateFrom: "2026-09-30",
+    returnDateTo: "2026-09-30",
+    maxStops: 1,
+    currencyCode: "TWD",
+    locale: "zh-TW"
+  },
+  // === 台中 (RMQ) 出發 ===
+  {
     id: "rmq-syd-rt-biz",
     originAirportCode: "RMQ",
     destinationAirportCode: "SYD",
     destinationCity: "Sydney",
     destinationCountry: "Australia",
     tripType: "round_trip",
-    cabinClass: "business",
+    cabinClass: "business", // 商務艙
+    departureDateFrom: "2026-09-24",
+    departureDateTo: "2026-09-24",
+    returnDateFrom: "2026-09-30",
+    returnDateTo: "2026-09-30",
+    maxStops: 1,
+    currencyCode: "TWD",
+    locale: "zh-TW"
+  },
+  {
+    id: "rmq-syd-rt-eco",
+    originAirportCode: "RMQ",
+    destinationAirportCode: "SYD",
+    destinationCity: "Sydney",
+    destinationCountry: "Australia",
+    tripType: "round_trip",
+    cabinClass: "economy", // 經濟艙
     departureDateFrom: "2026-09-24",
     departureDateTo: "2026-09-24",
     returnDateFrom: "2026-09-30",
@@ -108,16 +142,6 @@ async function main(): Promise<void> {
   for (const destination of activeDestinations) {
     console.log(
       `- ${destination.id}: ${destination.originAirportCode} -> ${destination.destinationAirportCode} (${destination.cabinClass})`
-    );
-  }
-
-  await client.close();
-}
-
-void main().catch((error) => {
-  console.error("[seed-tracked-destinations] failed", error);
-  process.exitCode = 1;
-});
     );
   }
 
