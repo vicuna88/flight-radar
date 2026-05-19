@@ -22,7 +22,6 @@ export const trackedDestinationSchema = z.object({
 });
 
 export const serpApiFlightResultSchema = z.object({
-  // 💡 這裡也全面放寬
   price: z.any(),
   currency: z.string().length(3).optional(),
   flights: z.array(z.object({
@@ -52,7 +51,6 @@ export const normalizedFareObservationSchema = z.object({
   returnDate: z.string().optional(),
   cabinClass: cabinClassSchema,
   tripType: tripTypeSchema,
-  // 💡 關鍵：把這裡的 .int().nonnegative() 移除，改成 z.any() 徹底放寬限制！
   priceAmountMinor: z.any(),
   currencyCode: z.string().length(3),
   deepLink: z.string().url().optional(),
@@ -84,7 +82,8 @@ export const discordEmbedSchema = z.object({
   title: z.string().min(1).max(256),
   description: z.string().min(1).max(4096),
   url: z.string().url().optional(),
-  color: z.number().int().nonnegative().optional(),
+  // 💡 把 color 也改成 z.any()，防止因為顏色數值為 0 或負數導致 too_small 錯誤
+  color: z.any().optional(), 
   fields: z.array(z.object({
     name: z.string().min(1).max(256),
     value: z.string().min(1).max(1024),
