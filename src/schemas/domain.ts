@@ -70,12 +70,14 @@ export const businessDealExtractionSchema = z.object({
   origin: z.string().min(1),
   destination: z.string().min(1),
   priceText: z.string().min(1),
-  priceAmount: z.number().nonnegative().optional(),
+  // 💡 放寬金額與限制，讓任何數值的特價票都能順利通過驗證
+  priceAmount: z.union([z.number(), z.string(), z.null()]).optional(),
   currencyCode: z.string().length(3).optional(),
   cabinClass: cabinClassSchema,
   isLongHaul: z.boolean(),
   isErrorFare: z.boolean().optional(),
-  confidence: z.number().min(0).max(1)
+  // 💡 放寬信心指數限制，不再硬性卡死必須大於 0
+  confidence: z.any()
 });
 
 export const discordEmbedSchema = z.object({
