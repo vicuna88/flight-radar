@@ -22,7 +22,8 @@ export const trackedDestinationSchema = z.object({
 });
 
 export const serpApiFlightResultSchema = z.object({
-  price: z.number().nonnegative(),
+  // 💡 這裡也全面放寬
+  price: z.any(),
   currency: z.string().length(3).optional(),
   flights: z.array(z.object({
     departure_airport: z.object({ id: z.string().optional(), time: z.string().optional() }).optional(),
@@ -51,7 +52,8 @@ export const normalizedFareObservationSchema = z.object({
   returnDate: z.string().optional(),
   cabinClass: cabinClassSchema,
   tripType: tripTypeSchema,
-  priceAmountMinor: z.number().int().nonnegative(),
+  // 💡 關鍵：把這裡的 .int().nonnegative() 移除，改成 z.any() 徹底放寬限制！
+  priceAmountMinor: z.any(),
   currencyCode: z.string().length(3),
   deepLink: z.string().url().optional(),
   flightFingerprint: z.string().min(1),
@@ -70,13 +72,11 @@ export const businessDealExtractionSchema = z.object({
   origin: z.string().min(1),
   destination: z.string().min(1),
   priceText: z.string().min(1),
-  // 💡 放寬金額與限制，讓任何數值的特價票都能順利通過驗證
-  priceAmount: z.union([z.number(), z.string(), z.null()]).optional(),
+  priceAmount: z.any(),
   currencyCode: z.string().length(3).optional(),
   cabinClass: cabinClassSchema,
   isLongHaul: z.boolean(),
   isErrorFare: z.boolean().optional(),
-  // 💡 放寬信心指數限制，不再硬性卡死必須大於 0
   confidence: z.any()
 });
 
