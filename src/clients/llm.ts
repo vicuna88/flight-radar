@@ -20,8 +20,9 @@ interface OpenAiChatCompletionResponse {
   }>;
 }
 
-const DEFAULT_OPENAI_BASE_URL = "https://api.openai.com/v1/chat/completions";
-const DEFAULT_OPENAI_MODEL = "gpt-4o-mini";
+// 💡 這裡已經幫你改裝成 Google Gemini 的專用連線網址與模型名稱囉！
+const DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/v1/chat/completions";
+const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 
 export function parseBusinessDealExtraction(payload: unknown): BusinessDealExtraction {
   return businessDealExtractionSchema.parse(payload);
@@ -36,8 +37,8 @@ export function createOpenAiDealExtractionClient(
     throw new Error("Fetch API is not available for LLM extraction client");
   }
 
-  const model = config.model ?? DEFAULT_OPENAI_MODEL;
-  const baseUrl = config.baseUrl ?? DEFAULT_OPENAI_BASE_URL;
+  const model = config.model && config.model !== "gpt-4o-mini" ? config.model : DEFAULT_GEMINI_MODEL;
+  const baseUrl = config.baseUrl && config.baseUrl !== "https://api.openai.com/v1/chat/completions" ? config.baseUrl : DEFAULT_GEMINI_BASE_URL;
 
   return {
     async extractBusinessDeal(item: RssItem): Promise<BusinessDealExtraction> {
