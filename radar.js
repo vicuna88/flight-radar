@@ -1,53 +1,33 @@
-// 鄭州特價機票雷達 - 獨立純淨版
+// 鄭州特價機票雷達 - 強化升級版
 const GEMINI_API_KEY = "AIzaSyCgGkWPrhy_YXSDTirME673LeObHsFrO_o";
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505858798487605259/I2xpW8XQpkQWILeK8stSxYIlc_qJ_j2JxVQawFrqBRbOJs6dBASHLMfYHwa99AB8-YTZ";
 
 async function sendToDiscord(embeds) {
   try {
-    const response = await fetch(DISCORD_WEBHOOK_URL, {
+    await fetch(DISCORD_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ embeds })
     });
-    if (response.ok) {
-      console.log("🟢 [成功] 鄭州機票情報已經送到你的 Discord 囉！");
-    } else {
-      console.error("🔴 [失敗] Discord 沒有回應：", response.statusText);
-    }
   } catch (err) {
-    console.error("❌ [錯誤] 發送至 Discord 時發生異常：", err);
+    console.error("Discord 發送失敗:", err);
   }
 }
 
 async function runRadar() {
-  console.log("🚀 [雷達啟動] 搜尋 TPE ➔ CGO (2026.07.15 - 2026.08.30) 待 20 天機票...");
-
   try {
-    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // 修正為符合 v1beta 的標準 API 請求路徑
+    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
     
     const prompt = {
       contents: [{
         parts: [{
-          text: `請分析 2026 年 7 月 15 日至 2026 年 8 月 30 日期間，從台北桃園 (TPE) 前往河南鄭州 (CGO) 且固定停留 20 天的所有來回機票組合。
-          請幫我找出這段期間內「最便宜的經濟艙」以及「最便宜的商務艙」各一組估價。
-          請嚴格以下列 JSON 格式回傳，不要包含任何 Markdown 標籤或 \`\`\` 符號：
+          text: `你是一個旅行社票價精算師。請幫我規劃 2026 年 7 月 15 日至 2026 年 8 月 30 日期間，從台北桃園 (TPE) 前往河南鄭州 (CGO) 且固定停留 20 天的來回機票。
+          請直接幫我挑選「一組最便宜經濟艙」與「一組最便宜商務艙」的推薦組合。
+          必須嚴格只回傳一個標準的 JSON 陣列，絕對不要包含任何 \`\`\`json 標籤或中文說明文字，格式如下：
           [
-            {
-              "cabinClass": "經濟艙",
-              "departureDate": "2026-07-XX",
-              "returnDate": "2026-08-XX",
-              "priceTwd": 15000,
-              "airline": "航空公司名稱",
-              "note": "推薦理由"
-            },
-            {
-              "cabinClass": "商務艙",
-              "departureDate": "2026-07-XX",
-              "returnDate": "2026-08-XX",
-              "priceTwd": 35000,
-              "airline": "航空公司名稱",
-              "note": "推薦理由"
-            }
+            {"cabinClass": "經濟艙", "departureDate": "2026-07-20", "returnDate": "2026-08-09", "priceTwd": 14500, "airline": "南方航空", "note": "直飛最低價"},
+            {"cabinClass": "商務艙", "departureDate": "2026-07-25", "returnDate": "2026-08-14", "priceTwd": 32000, "airline": "長榮航空", "note": "商務艙首選"}
           ]`
         }]
       }]
@@ -59,13 +39,19 @@ async function runRadar() {
       body: JSON.stringify(prompt)
     });
 
+    if (!res.ok) {
+      throw new Error(`Gemini API 聯絡失敗，錯誤碼: ${res.status}`);
+    }
+
     const data = await res.json();
-    const text = data.candidates[0].content.parts[0].text;
-    const cleanJson = text.replace(/```json|```/g, "").trim();
-    const deals = JSON.parse(cleanJson);
+    let text = data.candidates[0].content.parts[0].text.trim();
+    
+    // 強效清理可能夾帶的 Markdown 符號
+    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    const deals = JSON.parse(text);
 
     const embeds = deals.map(deal => ({
-      title: `✈️ 鄭州特價機票鎖定：${deal.cabinClass}最划算時段！`,
+      title: `✈️ 鄭州特價機票鎖定：${deal.cabinClass}最劃算時段！`,
       color: deal.cabinClass === "商務艙" ? 10181046 : 3447003,
       fields: [
         { name: "📍 航線", value: "桃園 (TPE) ➔ 鄭州 (CGO)", inline: true },
@@ -76,18 +62,17 @@ async function runRadar() {
         { name: "航空巨頭", value: deal.airline, inline: true },
         { name: "💡 秘書備忘錄", value: deal.note }
       ],
-      timestamp: new Date().toISOString(),
-      footer: { text: "Gemini AI 鄭州即時機票雷達" }
+      timestamp: new Date().toISOString()
     }));
 
     await sendToDiscord(embeds);
 
   } catch (error) {
-    console.error("🔴 雷達遇到異常：", error);
+    // 升級：如果真的還是噴錯，直接把「真正的錯誤原因」丟到 Discord 頻道，方便我們一秒抓漏！
     await sendToDiscord([{
-      title: "⚠️ 鄭州機票雷達打卡報告",
-      description: "目前持續為您鎖定 2026 暑假期間去鄭州待 20 天的票價行情，Gemini 已在背景持續守候！",
-      color: 16776960
+      title: "⚠️ 鄭州機票雷達·異常回報晶片",
+      description: `雷達運算時卡住了，錯誤訊息：\`${error.message}\`\n請將此畫面拍照給 AI 秘書協助排除！`,
+      color: 16711680
     }]);
   }
 }
