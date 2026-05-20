@@ -1,13 +1,14 @@
-const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505858798487605259/I2xpW8XQpkQWILeK8stSxYIlc_qJ_j2JxVQawFrqBRbOJs6dBASHLMfYHwa99AB8-YTZ";
+// 這是你剛剛取得的正確網址
+const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1506493000333656094/o1DEfLi-4DhRJyDID_FtQLKRKf_MMDnmyNRu0fOWkJaNd3MF4KrJzE8ouKf_DGpvQvRZ";
 
 async function runRadar() {
   const payload = {
-    username: "鄭州機票雷達", // 強制設定機器人名稱
-    content: "🚀 雷達啟動測試！",
+    username: "鄭州機票雷達", // 機器人名稱
+    content: "✅ 系統測試成功！", // 機器人說的話
     embeds: [{
-      title: "系統連接測試",
-      description: "如果你看到這則訊息，代表我們已經成功解決了連線與訊息發送邏輯！",
-      color: 5814783 // 設定一個顏色
+      title: "恭喜！雷達系統已連線",
+      description: "這代表你已經成功掌握了 GitHub 到 Discord 的自動化連線機制。接下來我們隨時可以把真正的機票查詢結果填入這裡。",
+      color: 5814783 // 設定一個亮眼的顏色
     }]
   };
 
@@ -17,7 +18,8 @@ async function runRadar() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    console.log("最終發送狀態碼:", response.status);
+    
+    console.log("發送狀態碼:", response.status);
   } catch (error) {
     console.error("發送失敗:", error);
   }
