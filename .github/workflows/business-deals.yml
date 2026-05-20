@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      # 關鍵：我們刪除了 npm run build，直接跳過編譯檢查
+      # 關鍵：跳過編譯階段，直接執行 (tsx 會在執行當下編譯)
       - name: Run Radar
         run: npx tsx src/index.ts
         env:
