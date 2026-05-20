@@ -1,4 +1,4 @@
-// 確認連線測試程式碼
+// 連線測試程式碼
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505858798487605259/I2xpW8XQpkQWILeK8stSxYIlc_qJ_j2JxVQawFrqBRbOJs6dBASHLMfYHwa99AB8-YTZ";
 
 async function testConnection() {
