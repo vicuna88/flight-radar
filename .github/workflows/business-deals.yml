@@ -18,13 +18,15 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Build project
-        run: npm run build
+      - name: Clean, Install and Build
+        run: |
+          rm -rf dist
+          npm install
+          npm run build
         
       - name: Run Radar
         run: node dist/src/index.js
         env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
