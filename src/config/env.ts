@@ -8,9 +8,14 @@ export const environmentSchema = z.object({
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-// 下面這些函式必須保留，即使你現在沒在用資料庫，程式碼的其他部分也在找它們
-export const getTursoConnectionConfig = () => ({ url: "", authToken: "" });
+// 這些函式必須導出，否則其他檔案會報錯找不到
+export const getTursoConnectionConfig = () => ({
+  url: "",
+  authToken: "",
+});
+
 export const loadEnvironment = () => environmentSchema.parse(process.env);
+
 export const getConfig = () => ({
   env: loadEnvironment(),
   db: getTursoConnectionConfig(),
