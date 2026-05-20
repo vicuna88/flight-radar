@@ -20,13 +20,14 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      # 注意：我們刪除了 npm run build，這會讓我們跳過所有編譯錯誤
-      
+      # 關鍵：我們刪除了 npm run build，直接跳過編譯檢查
       - name: Run Radar
         run: npx tsx src/index.ts
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           SKYSCANNER_API_KEY: ${{ secrets.SKYSCANNER_API_KEY }}
           DESTINATION_AIRPORT_CODE: "CGO"
-          # 如果程式還缺什麼，直接在這裡補上變數即可，不用改 env.ts 了
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          RSS_FEED_URLS: ${{ secrets.RSS_FEED_URLS }}
+          SERPAPI_API_KEY: ${{ secrets.SERPAPI_API_KEY }}
