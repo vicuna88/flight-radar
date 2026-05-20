@@ -17,8 +17,7 @@ jobs:
         with:
           node-version: '20'
           
-      # 關鍵步驟：刪除舊的 dist，強迫 GitHub 重新編譯
-      - name: Clean, Install and Build
+      - name: Clean and Build
         run: |
           rm -rf dist
           npm install
