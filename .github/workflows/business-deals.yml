@@ -18,11 +18,14 @@ jobs:
         with:
           node-version: '20'
           
-      - name: Install dependencies
-        run: npm install
+      - name: Clean, Install and Build
+        run: |
+          rm -rf dist
+          npm install
+          npm run build
         
       - name: Run Radar
-        run: npx tsx src/index.ts
+        run: node dist/src/index.js
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
