@@ -3,20 +3,27 @@ name: Zhengzhou Flight Radar
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # 每天 08:00 (台灣時間)
-    - cron: '0 9 * * *'  # 每天 17:00 (台灣時間)
+    - cron: '0 0 * * *'  # 每日上午 08:00 (UTC 0)
+    - cron: '0 9 * * *'  # 每日下午 17:00 (UTC 9)
 
 jobs:
   run-radar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          
       - name: Install dependencies
         run: npm install
+        
       - name: Run Radar
-        run: npx ts-node src/main.ts
+        run: |
+          npm install -g tsx
+          npx tsx src/main.ts
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
