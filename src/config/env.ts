@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// 定義你需要的所有環境變數
 export const environmentSchema = z.object({
   DISCORD_WEBHOOK_URL: z.string().url(),
   SKYSCANNER_API_KEY: z.string().min(1),
@@ -9,7 +8,7 @@ export const environmentSchema = z.object({
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-// 這裡填補原有的函式接口，確保程式不會報 "Module not found" 錯誤
+// 為了避開 Module not found 錯誤，必須定義這些函式結構
 export const getTursoConnectionConfig = () => ({
   url: "",
   authToken: "",
