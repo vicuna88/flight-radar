@@ -8,14 +8,9 @@ export const environmentSchema = z.object({
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-// 這些函式必須導出，否則其他檔案會報錯找不到
-export const getTursoConnectionConfig = () => ({
-  url: "",
-  authToken: "",
-});
-
+// 這些空的函數是為了滿足程式碼其他部分的呼叫需求，防止報錯
+export const getTursoConnectionConfig = () => ({ url: "", authToken: "" });
 export const loadEnvironment = () => environmentSchema.parse(process.env);
-
 export const getConfig = () => ({
   env: loadEnvironment(),
   db: getTursoConnectionConfig(),
