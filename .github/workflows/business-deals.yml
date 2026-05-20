@@ -1,24 +1,22 @@
 name: Zhengzhou Flight Radar
 
 on:
-  on:
-  workflow_dispatch: 
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # 每天 08:00 (UTC 0) 自動執行
-    - cron: '0 0 * * *'  # 每天 12:00 (UTC 0) 自動執行
-    - cron: '0 9 * * *'  # 每天 18:00 (UTC 9) 自動執行
+    - cron: '0 0 * * *'  # 每天 08:00 (台灣時間)
+    - cron: '0 9 * * *'  # 每天 17:00 (台灣時間)
 
 jobs:
   run-radar:
     runs-on: ubuntu-latest
     steps:
-      - name: 檢查程式碼
-        uses: actions/checkout@v4
-
-      - name: 安裝 Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: 啟動鄭州機票雷達
-        run: node radar.js
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run Radar
+        run: npx ts-node src/main.ts
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
