@@ -1,28 +1,20 @@
-// 鄭州機票雷達 - 偵錯模式
 const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1505858798487605259/I2xpW8XQpkQWILeK8stSxYIlc_qJ_j2JxVQawFrqBRbOJs6dBASHLMfYHwa99AB8-YTZ";
 
 async function runRadar() {
+  const payload = { content: "測試中...如果這句話沒出現，代表 Webhook 被 Discord 伺服器擋掉了。" };
+  
   try {
-    console.log("開始發送 Discord 測試...");
     const response = await fetch(DISCORD_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        embeds: [{
-          title: "🚀 機票雷達：偵錯模式啟動",
-          description: "如果看到這則訊息，代表程式邏輯已確認通暢。請告知我，我將幫你加入完整的 Gemini API 機票抓取功能。",
-          color: 16776960
-        }]
-      })
+      body: JSON.stringify(payload)
     });
     
-    if (!response.ok) {
-        throw new Error(`Discord 回應錯誤: ${response.status}`);
-    }
-    console.log("Discord 發送成功!");
+    // 強制把回應結果印在 GitHub Actions 的 Log 裡面
+    const result = await response.text();
+    console.log("Discord 回應內容:", result);
   } catch (err) {
-    console.error("錯誤:", err);
+    console.error("連線發生嚴重錯誤:", err);
   }
 }
-
 runRadar();
