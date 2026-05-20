@@ -1,41 +1,21 @@
 import { z } from "zod";
 
-// 1. 定義環境變數
 export const environmentSchema = z.object({
-  DATABASE_URL: z.string().optional(),
-  DATABASE_AUTH_TOKEN: z.string().optional(),
   DISCORD_WEBHOOK_URL: z.string().url(),
   DESTINATION_AIRPORT_CODE: z.string().min(1).default("CGO"),
-  LIMIT_DAYS: z.coerce.number().int().positive().default(30),
 });
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-// 2. 這是讓其他檔案能找到資料庫的關鍵函式
-export interface TursoConnectionConfig {
-  url: string;
-  authToken: string;
-}
+// 為了避開 Module not found 錯誤，我們必須匯出這些函式，即便目前沒用到資料庫
+export const getTursoConnectionConfig = () => ({
+  url: "",
+  authToken: "",
+});
 
-export const getTursoConnectionConfig = (): TursoConnectionConfig => {
-  return {
-    url: process.env.DATABASE_URL || "",
-    authToken: process.env.DATABASE_AUTH_TOKEN || "",
-  };
-};
+export const loadEnvironment = () => environmentSchema.parse(process.env);
 
-export const loadEnvironment = (): Environment => {
-  return environmentSchema.parse(process.env);
-};
-
-export interface AppConfig {
-  env: Environment;
-  db: TursoConnectionConfig;
-}
-
-export const getConfig = (): AppConfig => {
-  return {
-    env: loadEnvironment(),
-    db: getTursoConnectionConfig(),
-  };
-};
+export const getConfig = () => ({
+  env: loadEnvironment(),
+  db: getTursoConnectionConfig(),
+});
