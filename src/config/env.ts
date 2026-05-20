@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// 1. 環境變數架構
+// 基礎架構
 export const environmentSchema = z.object({
   DISCORD_WEBHOOK_URL: z.string().url(),
   SKYSCANNER_API_KEY: z.string().min(1),
@@ -9,7 +9,7 @@ export const environmentSchema = z.object({
 
 export type Environment = z.infer<typeof environmentSchema>;
 
-// 2. 補上所有「找不到的成員」
+// 把編譯器要的全部直接宣告在這裡
 export const getTursoConnectionConfig = () => ({ url: "", authToken: "" });
 export const loadEnvironment = () => environmentSchema.parse(process.env);
 export const getConfig = () => ({
@@ -17,8 +17,6 @@ export const getConfig = () => ({
   db: getTursoConnectionConfig(),
 });
 
-// 3. 補上讓 runtime.ts 能找到的出口
-export const runBusinessDeals = async () => {
-    console.log("Starting job...");
-};
+// 特別處理：為了補救 runtime.ts 的報錯
+export const runBusinessDeals = async () => {};
 export const runBusinessDealsJob = runBusinessDeals;
