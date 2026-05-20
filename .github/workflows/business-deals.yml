@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: '20'
           
-      # 關鍵：這裡會強迫刪除所有舊的編譯結果，確保每次都是全新的編譯
+      # 關鍵步驟：刪除舊的 dist，強迫 GitHub 重新編譯
       - name: Clean, Install and Build
         run: |
           rm -rf dist
